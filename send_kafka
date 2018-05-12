@@ -1,0 +1,31 @@
+#!/bin/bash
+
+REST_URL=http://192.168.1.129:8082
+
+
+if [ ${1} == "location-topic" -a $# == 4 ]; then
+  echo ${1} ${2} ${3} ${4}
+  DATA='{"value_schema": "{\"type\": \"record\", \"name\": \"com.example.ident\", \"fields\": '
+  DATA+='[{\"name\": \"ico\", \"type\": \"string\"},{\"name\": \"height\", \"type\": \"string\"},{\"name\": \"location\", \"type\": \"string\"}]}", '
+  DATA+='"records": [{"value": {"ico": "'${2}'", "height": "'${3}'", "location": "'${4}'"}}]}'
+
+elif [ ${1} == "ident-topic" -a $# == 3 ]; then
+  echo ${1} ${2} ${3} 
+  DATA='{"value_schema": "{\"type\": \"record\", \"name\": \"com.example.ident\", \"fields\": '
+  DATA+='[{\"name\": \"ico\", \"type\": \"string\"},{\"name\": \"indentification\", \"type\": \"string\"}]}", '
+  DATA+='"records": [{"value": {"ico": "'${2}'", "indentification": "'${3}'"}}]}'
+
+else
+  echo "Usage ${0} :  [location-topic ico height location] [ident-topic identification]  "
+  exit 1
+fi
+
+KAFKA_TOPIC=${1}
+
+
+curl -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" \
+   -H "Accept: application/vnd.kafka.v2+json" \
+   --data "${DATA}" \
+   "${REST_URL}/topics/${KAFKA_TOPIC}"
+
+echo
