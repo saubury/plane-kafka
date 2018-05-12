@@ -13,6 +13,7 @@ import getopt
 import json
 from pprint import pprint
 from datetime import datetime, date
+from subprocess import call
 
 # constants and globals
  
@@ -85,6 +86,7 @@ while True:
             valICAO = formText(searchICAO.group(2))
             valIdent = formText(searchIdent.group(2)).strip()
             printStuff('valICAO:{} valIdent:{}'.format(valICAO, valIdent)) 
+            call(["./send_kafka",  "ident-topic", valICAO, valIdent])
             #storeAndRefineICAOandCode(valICAO, valIdent)
  
         if searchFeet and searchICAO and searchLatitude and searchLongitude:
@@ -94,6 +96,8 @@ while True:
             valLatitude = formNumber(searchLatitude.group(2))
             valLongitude = formNumber(searchLongitude.group(2))
             printStuff('valICAO:{} valFeet:{} valLatitude:{} valLongitude:{}'.format(valICAO, valFeet, (valLatitude), (valLongitude)))
+            # ./send_kafka location-topic ico height location
+            call(["./send_kafka",  "location-topic", valICAO, "{}".format(valFeet), "{},{}".format(valLatitude, valLongitude)])
 #            processSquark (valICAO, valFeet, (valLatitude), (valLongitude))
  
         # End of block of info

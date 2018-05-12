@@ -1,15 +1,21 @@
 #!/bin/bash
 
+# Example Usgage
+#
+#   ./send_kafka location-topic 7c451c 11300.0 -33.766852,151.167412^C
+#   ./send_kafka ident-topic 7c451c QJE1726
+
+
 REST_URL=http://192.168.1.129:8082
 
 
-if [ ${1} == "location-topic" -a $# == 4 ]; then
+if [  $# == 4 -a ${1} == "location-topic" ]; then
   echo ${1} ${2} ${3} ${4}
   DATA='{"value_schema": "{\"type\": \"record\", \"name\": \"com.example.ident\", \"fields\": '
   DATA+='[{\"name\": \"ico\", \"type\": \"string\"},{\"name\": \"height\", \"type\": \"string\"},{\"name\": \"location\", \"type\": \"string\"}]}", '
   DATA+='"records": [{"value": {"ico": "'${2}'", "height": "'${3}'", "location": "'${4}'"}}]}'
 
-elif [ ${1} == "ident-topic" -a $# == 3 ]; then
+elif [ $# == 3 -a ${1} == "ident-topic" ]; then
   echo ${1} ${2} ${3} 
   DATA='{"value_schema": "{\"type\": \"record\", \"name\": \"com.example.ident\", \"fields\": '
   DATA+='[{\"name\": \"ico\", \"type\": \"string\"},{\"name\": \"indentification\", \"type\": \"string\"}]}", '
