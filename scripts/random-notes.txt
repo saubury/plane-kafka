@@ -1,32 +1,88 @@
-ksql> SET 'auto.offset.reset' = 'earliest';
+SET 'auto.offset.reset' = 'earliest';
 
-ksql> create stream identstream with (kafka_topic='ident-topic', value_format='AVRO');
-ksql> create stream locationstream with (kafka_topic='location-topic', value_format='AVRO');
+create stream identstream with (kafka_topic='ident-topic', value_format='AVRO');
+create stream locationstream with (kafka_topic='location-topic', value_format='AVRO');
 
-ksql> SELECT TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss'), ico, INDENTIFICATION  from identstream;
-ksql> SELECT TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss'), ico, height, location from locationstream;
+SELECT TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss'), ico, INDENTIFICATION  from identstream;
+SELECT TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss'), ico, height, location from locationstream;
 
-ksql> CREATE table jsontable2 with (value_format='JSON') AS SELECT name, count(*) AS events FROM avrostream window  TUMBLING (size 10 second) GROUP BY name;
+CREATE table jsontable2 with (value_format='JSON') AS SELECT name, count(*) AS events FROM avrostream window  TUMBLING (size 10 second) GROUP BY name;
+
+CREATE table locationtable with (value_format='JSON') AS \
+SELECT ico, height, location, count(*) AS events \
+FROM locationstream window  TUMBLING (size 10 second) \
+where location != '0.0,0.0' \
+GROUP BY ico, height, location;
+
+-- contaier stuff
 
 apt-get update
-apt-get install vim -y
+apt-get install vim-tiny -y
 
+-- connect stuff
+
+table_name=locationtable
+TABLE_NAME=`echo $table_name | tr '[a-z]' '[A-Z]'`
+
+curl -X "POST" "http://localhost:8083/connectors/" \
+     -H "Content-Type: application/json" \
+     -d $'{
+  "name": "es_sink_'$TABLE_NAME'",
+  "config": {
+    "schema.ignore": "true",
+    "topics": "'$TABLE_NAME'",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter.schemas.enable": false,
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "key.ignore": "true",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "type.name": "type.name=kafkaconnect",
+    "topic.index.map": "'$TABLE_NAME':'$table_name'",
+    "connection.url": "http://elasticsearch:9200",
+    "transforms": "FilterNulls,ExtractTimestamp",
+    "transforms.FilterNulls.type": "io.confluent.transforms.NullFilter",
+    "transforms.ExtractTimestamp.type": "org.apache.kafka.connect.transforms.InsertField$Value",
+    "transforms.ExtractTimestamp.timestamp.field" : "EVENT_TS"
+  }
+}' 
+
+-- kafka stuff
+cat ico-topic.json | kafka-avro-console-producer --broker-list localhost:9092 --topic ico-topic  --property value.schema='{"type":"record","name":"myrecord2","fields":[{"name":"ico","type":"string"},{"name":"description","type":"string"}]}'
+
+{"ico":"ABC", "description":"My desciption for ico code ABC"}
+{"ico":"ZXY", "description":"My desciption for ico code ZXY"}
 
 
 -- kibana stuff
 
-put xxx
+put locationtable
 {
-           "fields": {
+    "mappings": {
+      "type.name=kafkaconnect": {
+        "properties": {
+          "EVENTS": {
+            "type": "long"
+          },
+          "EVENT_TS": {
+            "type": "date"
+          },
+          "HEIGHT": {
+            "type": "float"
+          },
+          "ICO": {
+            "type": "text",
+            "fields": {
               "keyword": {
                 "type": "keyword",
                 "ignore_above": 256
+              }
+            }
+          },
+          "LOCATION": {
+            "type": "geo_point"
+          }
+        }
+      }
+    }
+}
 
-
-          "location": {
-          "type": "geo_point"
-        },
-		
-		ts:": {
-		            "type": "date"
-		          },
