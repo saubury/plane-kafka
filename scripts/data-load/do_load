@@ -1,0 +1,6 @@
+#!/bin/bash
+
+HOST=localhost
+
+cat icao-to-aircraft.json | kafka-avro-console-producer --broker-list ${HOST}:9092 --property schema.registry.url=http://${HOST}:8081 --topic icao-to-aircraft  \
+--property value.schema='{"type":"record","name":"i2a","fields":[{"name":"icao","type":"string"},{"name":"aircraft","type":"string"},{"name":"registration","type":"string"}]}'
