@@ -1,0 +1,44 @@
+---
+version: '2'
+services:
+  confluent:
+    image: 'confluentinc/ksql-clickstream-demo:4.1.0'
+    hostname: confluent
+    ports:
+      - "2181:2181"
+      - "3030:3030"
+      - "8081-8083:8081-8083"
+      - "9581-9585:9581-9585"
+      - "9092:9092"
+      - '8088:8088'
+    command: "tail -f /dev/null"
+    environment:
+      TZ: Australia/Sydney
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+  elasticsearch:
+    image: 'docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.4'
+    hostname: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    depends_on:
+      - confluent
+    environment:
+      TZ: Australia/Sydney
+      discovery.type: 'single-node'
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+  kibana:
+    image: 'docker.elastic.co/kibana/kibana-oss:6.2.4'
+    hostname: kibana
+    environment:
+      TZ: Australia/Sydney
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    extra_hosts:
+      - "moby:127.0.0.1"
