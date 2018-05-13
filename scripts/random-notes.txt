@@ -1,0 +1,13 @@
+ksql> SET 'auto.offset.reset' = 'earliest';
+
+ksql> create stream identstream with (kafka_topic='ident-topic', value_format='AVRO');
+ksql> create stream locationstream with (kafka_topic='location-topic', value_format='AVRO');
+
+ksql> SELECT TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss'), ico, INDENTIFICATION  from identstream;
+ksql> SELECT TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss'), ico, height, location from locationstream;
+
+ksql> CREATE table jsontable2 with (value_format='JSON') AS SELECT name, count(*) AS events FROM avrostream window  TUMBLING (size 10 second) GROUP BY name;
+
+apt-get update
+apt-get install vim -y
+
