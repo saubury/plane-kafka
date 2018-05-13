@@ -11,3 +11,22 @@ ksql> CREATE table jsontable2 with (value_format='JSON') AS SELECT name, count(*
 apt-get update
 apt-get install vim -y
 
+
+
+-- kibana stuff
+
+put xxx
+{
+           "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+
+
+          "location": {
+          "type": "geo_point"
+        },
+		
+		ts:": {
+		            "type": "date"
+		          },
