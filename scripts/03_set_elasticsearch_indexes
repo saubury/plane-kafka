@@ -1,0 +1,116 @@
+#!/bin/bash
+
+unset http_proxy
+unset https_proxy
+export http_proxy
+export https_proxy
+
+HOST=elasticsearch
+
+curl -Xput "http://${HOST}:9200/locationtable" -H 'Content-Type: application/json' -d'
+{
+    "mappings": {
+      "type.name=kafkaconnect": {
+        "properties": {
+          "AIRCRAFT": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "EVENTS": {
+            "type": "long"
+          },
+          "EVENT_TS": {
+            "type": "date"
+          },
+          "HEIGHT": {
+            "type": "float"
+          },
+          "ICO": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "LOCATION": {
+            "type": "geo_point"
+          },
+          "REGISTRATION": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      }
+    }
+}'
+
+echo
+
+
+
+
+curl -Xput "http://${HOST}:9200/callsigntable" -H 'Content-Type: application/json' -d'
+{
+    "mappings": {
+      "type.name=kafkaconnect": {
+        "properties": {
+          "CALLSIGN": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "EVENTS": {
+            "type": "long"
+          },
+          "EVENT_TS": {
+            "type": "date"
+          },
+          "FROMAIRPORT": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "ICO": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "TOAIRPORT": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      }
+    }
+}'
+
+echo

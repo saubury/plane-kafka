@@ -1,10 +1,18 @@
 #!/bin/bash
 
+unset http_proxy
+unset https_proxy
+export http_proxy
+export https_proxy
+
+HOST=localhos
+
 topic_to_elastic () {
   table_name=$1
   TABLE_NAME=`echo $table_name | tr '[a-z]' '[A-Z]'`
+  echo "*** MAP ${TABLE_NAME} ***"
 
-  curl -X "POST" "http://localhost:8083/connectors/" \
+  curl -X "POST" "http://${HOST}:8083/connectors/" \
      -H "Content-Type: application/json" \
      -d $'{
   "name": "es_sink_'$TABLE_NAME'",
@@ -31,3 +39,5 @@ topic_to_elastic () {
 
 
 topic_to_elastic locationtable
+
+topic_to_elastic callsigntable
