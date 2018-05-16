@@ -5,12 +5,14 @@ unset https_proxy
 export http_proxy
 export https_proxy
 
-HOST=localhos
+HOST=localhost
 
 topic_to_elastic () {
   table_name=$1
   TABLE_NAME=`echo $table_name | tr '[a-z]' '[A-Z]'`
+  echo "************************************"
   echo "*** MAP ${TABLE_NAME} ***"
+  echo "************************************"
 
   curl -X "POST" "http://${HOST}:8083/connectors/" \
      -H "Content-Type: application/json" \
@@ -34,6 +36,7 @@ topic_to_elastic () {
   }
 }' 
 
+  echo
   echo
 }
 

@@ -7,9 +7,11 @@ export https_proxy
 
 HOST=elasticsearch
 
-echo "Loading Elastic Dynamic Template to ensure _TS fields are used for TimeStamp"
+echo "Loading Elastic Dynamic Templates"
 
 curl -XDELETE "http://${HOST}:9200/_template/kafkaconnect/"
+echo
+echo
 
 curl -XPUT "http://${HOST}:9200/_template/kafkaconnect/" -H 'Content-Type: application/json' -d'
 {
@@ -30,20 +32,18 @@ curl -XPUT "http://${HOST}:9200/_template/kafkaconnect/" -H 'Content-Type: appli
           }
         },
         {
-          "locations": {
-            "match": "LOCATION",
+          "heights": {
+            "match": "HEIGHT",
             "mapping": {
-              "type": "geo_point"
+              "type": "float"
             }
           }
         },
         {
-          "non_analysed_string_template": {
-            "match": "*",
-            "match_mapping_type": "string",
+          "locations": {
+            "match": "LOCATION",
             "mapping": {
-              "type": "keyword",
-              "index": "not_analyzed"
+              "type": "geo_point"
             }
           }
         }
@@ -53,4 +53,3 @@ curl -XPUT "http://${HOST}:9200/_template/kafkaconnect/" -H 'Content-Type: appli
 }'
 
 echo
-
