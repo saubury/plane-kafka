@@ -1,4 +1,4 @@
---- Use in addition to main docker-compose
+---
 version: '2'
 services:
   schema_registry_ui:
