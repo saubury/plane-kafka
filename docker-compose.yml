@@ -2,7 +2,9 @@
 version: '2'
 services:
   confluent:
-    image: 'confluentinc/ksql-clickstream-demo:4.1.0'
+    image: 'simonaubury/ksql-clickstream-plane:latest'
+    build:
+      context: docker/
     hostname: confluent
     ports:
       - "2181:2181"

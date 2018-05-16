@@ -1,0 +1,103 @@
+--- Use in addition to main docker-compose
+version: '2'
+services:
+  schema_registry_ui:
+    image: 'landoop/schema-registry-ui'
+    hostname: schema_registry_ui
+    depends_on:
+      - confluent
+    ports:
+      - "8002:8000"
+    environment:
+      TZ: Australia/Sydney
+      KAFKA_REST_PROXY_URL: "http://confluent:8082"
+      SCHEMAREGISTRY_URL: 'http://confluent:8081'
+      KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://confluent:8081'
+      PROXY: "true"
+      PROXY_SKIP_VERIFY: "true"
+      MAX_BYTES: "20000000"
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+  kafka_topics_ui:
+    image: 'landoop/kafka-topics-ui'
+    hostname: kafka_topics_ui
+    depends_on:
+      - confluent
+    ports:
+      - "8005:8000"
+    environment:
+      TZ: Australia/Sydney
+      KAFKA_REST_PROXY_URL: "http://confluent:8082"
+      PROXY: "true"
+      PROXY_SKIP_VERIFY: "true"
+      MAX_BYTES: "20000000"
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+  kafka-connect-ui:
+    image: 'landoop/kafka-connect-ui'
+    hostname: kafka-connect-ui
+    depends_on:
+      - confluent
+    ports:
+      - "8003:8000"
+    environment:
+      TZ: Australia/Sydney
+      CONNECT_URL: "http://confluent:8083"
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+
+
+
+
+
+
+
+  confluent:
+    image: 'simonaubury/ksql-clickstream-plane:latest'
+    build:
+      context: docker/
+#    image: 'confluentinc/ksql-clickstream-demo:4.1.0'
+    hostname: confluent
+    ports:
+      - "2181:2181"
+      - "3030:3030"
+      - "8081-8083:8081-8083"
+      - "9581-9585:9581-9585"
+      - "9092:9092"
+      - '8088:8088'
+    command: "tail -f /dev/null"
+    environment:
+      TZ: Australia/Sydney
+    volumes:
+      - ./scripts:/scripts
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+  elasticsearch:
+    image: 'docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.4'
+    hostname: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    depends_on:
+      - confluent
+    environment:
+      TZ: Australia/Sydney
+      discovery.type: 'single-node'
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+  kibana:
+    image: 'docker.elastic.co/kibana/kibana-oss:6.2.4'
+    hostname: kibana
+    environment:
+      TZ: Australia/Sydney
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    extra_hosts:
+      - "moby:127.0.0.1"
