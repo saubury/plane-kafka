@@ -27,23 +27,23 @@ create stream location_stream with (kafka_topic='location-topic', value_format='
 -- 4. setup stream ident_stream
 drop stream ident_stream;
 create stream ident_stream with (kafka_topic='ident-topic', value_format='AVRO');
-	
--- 5. combined result, location_stream join icao_to_aircraft 
-drop stream location_and_details_stream;
-create stream location_and_details_stream as select l.ico, l.height, l.location, t.aircraft, t.registration from location_stream l left join icao_to_aircraft t on l.ico = t.icao;
 
+-- 5. combined result, location_stream join icao_to_aircraft
+drop stream location_and_details_stream;
+create stream location_and_details_stream as select l.ico, l.height, l.location, t.aircraft, t.registration, t.manufacturer from location_stream l left join icao_to_aircraft t on l.ico = t.icao;
+
+drop table locationtable;
 CREATE table locationtable with (value_format='JSON') AS \
-select ico, height, location, aircraft, registration, count(*) as events \
+select ico, height, location, aircraft, registration, manufacturer, count(*) as events \
 from location_and_details_stream WINDOW TUMBLING (size 10 second) \
-group by ico, height, location, aircraft, registration;
+group by ico, height, location, aircraft, registration, manufacturer;
 
 -- 6. combined result, ident_stream join callsign
 drop stream ident_callsign_stream;
-create stream ident_callsign_stream as select i.ICO, c.callsign, c.fromairport, c.toairport from ident_stream i left join callsign_details c on i.INDENTIFICATION = c.callsign;
+create stream ident_callsign_stream as select i.ICO, c.operatorname, c.callsign, c.fromairport, c.toairport from ident_stream i left join callsign_details c on i.INDENTIFICATION = c.callsign;
 
+drop table callsigntable;
 CREATE table callsigntable with (value_format='JSON') AS \
-select ICO, callsign, fromairport, toairport, count(*) as events \
+select ICO, callsign, operatorname, fromairport, toairport, count(*) as events \
 from ident_callsign_stream WINDOW TUMBLING (size 10 second) \
-group by ICO, callsign, fromairport, toairport;
-
-
+group by ICO, callsign, operatorname, fromairport, toairport;

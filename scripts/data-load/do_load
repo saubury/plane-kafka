@@ -2,13 +2,15 @@
 
 HOST=localhost
 
-grep '"VH-' icao-to-aircraft.json | grep B73 | head -20 \
-| kafka-avro-console-producer --broker-list ${HOST}:9092 --property schema.registry.url=http://${HOST}:8081 --topic icao-to-aircraft  \
---property value.schema='{"type":"record","name":"i2a","fields":[{"name":"icao","type":"string"},{"name":"aircraft","type":"string"},{"name":"registration","type":"string"}]}'
+#grep '"VH-' icao-to-aircraft.json | grep B73 | head -20 \
+
+cat icao-to-aircraft.json | kafka-avro-console-producer --broker-list ${HOST}:9092 --property schema.registry.url=http://${HOST}:8081 --topic icao-to-aircraft  \
+--property value.schema='{"type":"record","name":"i2a","fields":[{"name":"icao","type":"string"}, {"name":"manufacturer","type":"string"}, {"name":"aircraft","type":"string"}, {"name":"registration","type":"string"}]}'
 
 
-head callsign-details.json.mini \
-| kafka-avro-console-producer --broker-list ${HOST}:9092 --property schema.registry.url=http://${HOST}:8081 --topic callsign-details  \
---property value.schema='{"type":"record","name":"cd","fields":[{"name":"callsign","type":"string"},{"name":"fromairport","type":"string"},{"name":"toairport","type":"string"}]}'
+#head callsign-details.json \
+
+cat callsign-details.json  | kafka-avro-console-producer --broker-list ${HOST}:9092 --property schema.registry.url=http://${HOST}:8081 --topic callsign-details  \
+--property value.schema='{"type":"record","name":"cd","fields":[{"name":"callsign","type":"string"}, {"name":"operatorname","type":"string"}, {"name":"fromairport","type":"string"}, {"name":"toairport","type":"string"}]}'
 
 

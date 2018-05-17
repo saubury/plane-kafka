@@ -18,6 +18,7 @@ services:
       TZ: Australia/Sydney
     volumes:
       - ./scripts:/scripts
+      - ./raspberry-pi:/raspberry-pi
     extra_hosts:
       - "moby:127.0.0.1"
 

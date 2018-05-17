@@ -58,7 +58,7 @@ curl -X "POST" "http://localhost:8083/connectors/" \
     "transforms.ExtractTimestamp.type": "org.apache.kafka.connect.transforms.InsertField$Value",
     "transforms.ExtractTimestamp.timestamp.field" : "EVENT_TS"
   }
-}' 
+}'
 
 -- kafka stuff
 cat ico-topic.json | kafka-avro-console-producer --broker-list localhost:9092 --topic ico-topic  --property value.schema='{"type":"record","name":"myrecord2","fields":[{"name":"ico","type":"string"},{"name":"description","type":"string"}]}'
@@ -104,3 +104,7 @@ put locationtable
 -- docker stuff
 WARNING: Image for service confluent was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
 
+7  export HOST_IP=localhost
+8  ./send_kafka ident-topic 7c451c QJE1726
+9  ./send_kafka location-topic 7c451c 11300.0 -33.766852,151.167412
+10  history
