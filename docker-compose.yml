@@ -38,6 +38,8 @@ services:
 
   kibana:
     image: 'docker.elastic.co/kibana/kibana-oss:6.2.4'
+    volumes:
+      - ./config/kibana.yml:/usr/share/kibana/config/kibana.yml
     hostname: kibana
     environment:
       TZ: Australia/Sydney
