@@ -11,11 +11,13 @@ import time
 import sqlite3 as lite
 import getopt
 import json
+import os.path
 from pprint import pprint
 from datetime import datetime, date
 from subprocess import call
 
 # constants and globals
+cDump1080="/home/pi/dump1090/dump1090"
  
 def formNumber (pInputText):
     try:
@@ -34,30 +36,27 @@ def printStuff (pText):
 textblock = ''
 vDebugMode = 0
 vSnapMode = 0
-vManualBrg=-1
-vManualAzm=-1
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:],"sda:b:", ["snap", "debug", "azimuth=", "bearing="] )
+    opts, args = getopt.getopt(sys.argv[1:],"sda:b:", ["verbose", "debug="] )
 except getopt.GetoptError:
-    print 'piplanepicture.py [-s|--snap] [-d|--debug] [-a XX|--azimuth=XX] [-b YY|--bearing=YY]'
+    print 'plane-kafka.py [-v|--verbose] [-d XX|--debug=]'
     sys.exit(2)
 for opt, arg in opts:
     if opt in ('-d', '--debug') :
         vDebugMode = 1
-    elif opt in ('-s', '--snap') :
-        vSnapMode = 1
-    elif opt in ('-a', '--azimuth'):
-        vManualAzm = arg
-    elif opt in ('-b', '--bearing'):
-        vManualBrg = arg
-
+        vDebugFile = arg
+        if not os.path.isfile(vDebugFile):
+          print "File {} does not exist".format(vDebugFile)
+          sys.exit(2)
+    elif opt in ('-v', '--verbose') :
+        vVerboseMode = 1
 
 if vDebugMode == 0: 
-    sproc = subprocess.Popen('/home/pi/dump1090/dump1090', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    sproc = subprocess.Popen(cDump1080, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 else:
     print '*** DEBUG MODE ***'
-    sproc = subprocess.Popen('cat /home/pi/test/dump1090_test2.txt', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    sproc = subprocess.Popen('cat {}'.format(vDebugFile), shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 
 
@@ -69,7 +68,7 @@ printStuff('Started')
 
 while True: 
     if vDebugMode == 1: 
-        time.sleep(.001)
+        time.sleep(.01)
 
     line = sproc.stdout.readline()
     textblock = textblock + line
