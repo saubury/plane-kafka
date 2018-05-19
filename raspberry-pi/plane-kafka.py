@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python
 
 # ./dump1090 --net | python ../share/pollandpicture.py
 
