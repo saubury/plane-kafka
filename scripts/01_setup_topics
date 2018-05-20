@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export HOST_NAME=localhost
+/raspberry-pi/send_kafka location-topic 7c451c 11300.0 -33.766852,151.167412
+/raspberry-pi/send_kafka ident-topic 7c451c QJE1726
