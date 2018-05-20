@@ -108,3 +108,21 @@ WARNING: Image for service confluent was built because it did not already exist.
 8  ./send_kafka ident-topic 7c451c QJE1726
 9  ./send_kafka location-topic 7c451c 11300.0 -33.766852,151.167412
 10  history
+
+
+-- Kafka command line
+kafka-topics --list --zookeeper localhost:2181
+kafka-avro-console-consumer --bootstrap-server localhost:9092 --property schema.registry.url=http://localhost:8081 --property print.key=true --topic icao-to-aircraft --from-beginning
+
+
+
+
+
+docker stats
+CONTAINER ID        NAME                              CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS
+c77974ca6409        planekafka_kibana_1               0.89%               80.31MiB / 13.68GiB   0.57%               228MB / 78.2MB      0B / 4.1kB          10
+eef527d850e6        planekafka_kafka-connect-ui_1     0.00%               2.59MiB / 13.68GiB    0.02%               19.7kB / 13.6kB     229kB / 4.1kB       13
+4c240ea831c9        planekafka_schema_registry_ui_1   0.00%               2.176MiB / 13.68GiB   0.02%               5.94kB / 0B         0B / 4.1kB          9
+2e2100786c8a        planekafka_kafka_topics_ui_1      0.00%               3.238MiB / 13.68GiB   0.02%               83.5kB / 77.1kB     0B / 4.1kB          12
+384b5258e8be        planekafka_elasticsearch_1        0.66%               1.391GiB / 13.68GiB   10.16%              59.5MB / 203MB      0B / 97MB           64
+038dde3d2b8e        planekafka_confluent_1            20.98%              4.515GiB / 13.68GiB   33.00%              17.8MB / 16MB       799kB / 4.45GB      374
