@@ -5,6 +5,10 @@
 #   ./send_kafka location-topic 7c451c 11300.0 -33.766852,151.167412
 #   ./send_kafka ident-topic 7c451c QJE1726
 
+unset http_proxy
+unset https_proxy
+export http_proxy
+export https_proxy
 
 if [ -z ${HOST_IP} ]; then
   HOST_IP=192.168.1.129
