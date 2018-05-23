@@ -1,5 +1,16 @@
+# Plane Kafka - Plane tracking with KSQL and a Raspberry Pi
 
-### Get started
+![Arch](/docs/plane-kafka-01.png)
+
+### Raspberry Pi Setup
+Install dump1090 (instructions here) and clone this repo.
+```
+cd raspberry-pi
+export HOST_IP=192.168.1.129 # Docker host
+./plane-kafka.py
+```
+
+### Docker Setup
 ```
 docker-compose up -d
 ```
@@ -10,7 +21,7 @@ docker-compose up -d
 docker-compose exec confluent bash
 ```
 
-And within the container 
+And within the container
 ```
 confluent start
 cd /scripts
