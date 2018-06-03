@@ -15,6 +15,12 @@ export HOST_IP=192.168.1.129 # Docker host
 docker-compose up -d
 ```
 
+### Prepare Database Files
+You will need a database of _icao-to-aircraft_ mappings (in _icao-to-aircraft.json_) and a database of callsigns (_callsign-details.json_).  A sood source of data is https://openflights.org/data.html where you can find aircraft data suitable for your region
+
+If you are ion a hutty, _icao-to-aircraft.json.sample_ and _callsign-details.json.sample_ provide you basic records to experiment
+
+
 ### Login
 
 ```
