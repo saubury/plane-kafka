@@ -46,7 +46,7 @@ Now load the files
 ```
 
 
-And then run ksql
+And then run ksql.  If you recieve parse errors, try running the KSQL statments one by one manually instead of the entire script as one.
 
 ```
 ksql
