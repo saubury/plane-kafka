@@ -32,8 +32,19 @@ And within the container
 confluent start
 cd /scripts
 ./01_setup_topics
+```
+
+If you do not have database files, copy the sample files
+```
+cp -i icao-to-aircraft.json.sample icao-to-aircraft.json
+cp -i callsign-details.json.sample callsign-details.json
+```
+
+Now load the files
+```
 ./02_do_load
 ```
+
 
 And then run ksql
 
