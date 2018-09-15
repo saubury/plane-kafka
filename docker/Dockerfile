@@ -1,4 +1,4 @@
-FROM confluentinc/ksql-clickstream-demo:4.1.0
+FROM confluentinc/ksql-clickstream-demo:5.0.0
 
 LABEL version="1.0"
 LABEL description="Extending confluentinc/ksql image adding a few more packages"
