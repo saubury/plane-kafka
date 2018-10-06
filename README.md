@@ -6,7 +6,7 @@
 - If you don't have a Raspberry Pi you can skip to _Docker Setup_ and use the sample data
 - Clone this repo on the Raspberry Pi
 - [Install dump1090](https://www.rtl-sdr.com/adsb-aircraft-radar-with-rtl-sdr)  
-- The the IP address below to the _docker host_ (and not the IP address of the Raspberry Pi).  This is where you'll transmit the messages to Kafka
+- Set the IP address below to the _docker host_ (and not the IP address of the Raspberry Pi).  This is where you'll transmit the messages to Kafka
 
 ```
 # On the Raspberry Pi 
